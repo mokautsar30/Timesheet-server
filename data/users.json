@@ -1,0 +1,18 @@
+[
+    {
+      "username": "mokautsar",
+      "email": "mokamoka@gmail.com",
+      "password": "12345",
+      "name": "moka",
+      "rate": 10000,
+      "access": "Admin"
+    },
+    {
+      "username": "novrigio",
+      "email": "novri@gmail.com",
+      "password": "12345",
+      "name": "novri",
+      "rate": 12000,
+      "access": "Employee"
+    }
+  ]
