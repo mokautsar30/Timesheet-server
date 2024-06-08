@@ -45,9 +45,6 @@ module.exports = {
       timeEnd: {
         type: Sequelize.TIME
       },
-      totalTime: {
-        type: Sequelize.TIME
-      },
       totalPrice: {
         type: Sequelize.INTEGER
       },
