@@ -1,7 +1,6 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
+const { hashPassword } = require("../helpers/bcrypt");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -16,74 +15,82 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  User.init({
-    username: DataTypes.STRING,
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: {
-        args: true,
-        msg: "This email is already exist",
-      },
-      validate: {
-        notNull: {
-          msg: "Email is required",
-        },
-        notEmpty: {
-          msg: "Email is required",
-        },
-        isEmail: {
+  User.init(
+    {
+      username: DataTypes.STRING,
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: {
           args: true,
-          msg: "Email must be email format",
+          msg: "This email is already exist",
+        },
+        validate: {
+          notNull: {
+            msg: "Email is required",
+          },
+          notEmpty: {
+            msg: "Email is required",
+          },
+          isEmail: {
+            args: true,
+            msg: "Email must be email format",
+          },
         },
       },
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: "Password is required",
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "Password is required",
+          },
+          notEmpty: {
+            msg: "Password is required",
+          },
+          len: {
+            args: [6],
+            msg: "Password must be at least 6 characters long",
+          },
         },
-        notEmpty: {
-          msg: "Password is required",
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "Name is required",
+          },
+          notEmpty: {
+            msg: "Name is required",
+          },
         },
-        len: [6],
-        msg: "Password must be at least 6 characters long",
-      }
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: 'Name is required',
+      },
+      rate: {
+        type: DataTypes.INTEGER,
+        validate: {
+          isInt: {
+            msg: "Rate must be an integer value",
+          },
+          min: {
+            args: [0],
+            msg: "Rate must be a positive value",
+          },
         },
-        notEmpty: {
-          msg: 'Name is required',
-        }
-      }
+      },
+      access: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: "Employee",
+      },
     },
-    rate: {
-      type: DataTypes.INTEGER,
-      validate: {
-        isInt: {
-          msg: 'Rate must be an integer value'
-        },
-        min: {
-          args: [0],
-          msg: 'Rate must be a positive value'
-        }
-      }
-    },
-    access: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: 'Employee'
+    {
+      sequelize,
+      modelName: "User",
     }
-  }, {
-    sequelize,
-    modelName: 'User',
+  );
+  User.beforeCreate((user) => {
+    user.password = hashPassword(user.password);
   });
   return User;
 };
