@@ -1,0 +1,25 @@
+[
+    {
+      "projectId": 1,
+      "userId": 1,
+      "activityName": "Meeting",
+      "dateStart": "2024-06-10",
+      "dateEnd": "2024-06-10",
+      "timeStart": "09:00:00",
+      "timeEnd": "10:00:00",
+      "totalTime": "01:00:00",
+      "totalPrice": 0
+    },
+    {
+      "projectId": 2,
+      "userId": 2,
+      "activityName": "Development",
+      "dateStart": "2024-06-10",
+      "dateEnd": "2024-06-12",
+      "timeStart": "10:00:00",
+      "timeEnd": "15:00:00",
+      "totalTime": "15:00:00",
+      "totalPrice": 180000
+    }
+  ]
+  
