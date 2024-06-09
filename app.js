@@ -6,6 +6,7 @@ const express = require("express");
 const port = process.env.PORT || 3000;
 const app = express();
 const routes = require("./routes");
+const errorHandler = require('./middlewares/errorHandlers')
 app.use(cors());
 
 app.use(express.urlencoded({ extended: true }));
@@ -20,6 +21,8 @@ const middlewareLog = (req, res, next) => {
 app.use(middlewareLog);
 
 app.use(routes);
+
+app.use(errorHandler)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

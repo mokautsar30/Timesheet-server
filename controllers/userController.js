@@ -4,7 +4,7 @@ const { signToken } = require("../helpers/jwt");
 const { User } = require("../models");
 
 class UserController {
-  static async login(req, res) {
+  static async login(req, res, next) {
     try {
       const { email, password } = req.body;
 
@@ -34,10 +34,10 @@ class UserController {
 
       res.status(200).json({ access_token, id: user.id });
     } catch (error) {
-      res.status(500).json({ message: "internal server error" });
+      next(error)
     }
   }
-  static async register(req, res) {
+  static async register(req, res, next) {
     try {
       const { username, email, password, name, rate, access } = req.body;
 
@@ -75,8 +75,33 @@ class UserController {
         email: user.email,
       });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "internal server error" });
+      next(error)
+    }
+  }
+  static async editUser(req,res,next) {
+    try {
+      const foundUser = await User.findOne({
+        where: {
+          id: req.params.id,
+        },
+      });
+      if (!foundUser) {
+        throw { name: "ErrorNotFound" };
+      }
+
+      const user = await User.update(req.body, {
+        where: {
+          id: req.params.id,
+        },
+      });
+
+      const updateUser = await User.findByPk(req.params.id);
+      res.status(200).json({
+        message: `Success update user by id ${req.params.id}`,
+        data: updateUser,
+      });
+    } catch (error) {
+      next(error)
     }
   }
 }

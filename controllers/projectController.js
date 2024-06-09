@@ -3,7 +3,7 @@ const {Project} = require('../models')
 
 
 class ProjectController {
-    static async createProject(req, res) {
+    static async createProject(req, res, next) {
         try {
             const project = req.body;
             project.userId = req.user.id;
@@ -11,11 +11,10 @@ class ProjectController {
             const data = await Project.create(project);
             res.status(201).json(data)
         } catch (error) {
-            console.log(error);
-            res.status(500).json({message: 'internal server error'})
+          next(error)
         }
     }
-    static async viewProject(req, res) {
+    static async viewProject(req, res, next) {
         try {
             const { search } = req.query;
             const options = {};
@@ -29,10 +28,10 @@ class ProjectController {
             const data = await Project.findAll(options);
             res.status(200).json(data);
           } catch (error) {
-            res.status(500).json({message: 'internal server error'})
+            next(error)
           }
         }
-    static async editProjectById(req, res){
+    static async editProjectById(req, res, next){
       try {
         const foundProject = await Project.findOne({
           where: {
@@ -55,11 +54,10 @@ class ProjectController {
           data: updateProject,
         });
       } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: "internal server error" });
+        next(error)
       }
     }
-    static async deleteProjectById(req, res) {
+    static async deleteProjectById(req, res, next) {
       try {
         const projectId = req.params.id;
         const project = await Project.findOne({
@@ -76,8 +74,7 @@ class ProjectController {
           data: project,
         });
       } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: "internal server error" });
+        next(error)
       }
     }
 }

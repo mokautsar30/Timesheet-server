@@ -2,7 +2,7 @@ const { Op } = require("sequelize");
 const { Activity, User } = require("../models");
 
 class ActivityController {
-  static async createActivity(req, res) {
+  static async createActivity(req, res, next) {
     try {
       const activity = req.body;
       activity.userId = req.user.id;
@@ -11,10 +11,10 @@ class ActivityController {
       res.status(201).json(data);
     } catch (error) {
       console.log(error);
-      res.status(500).json({ message: "internal server error" });
+      next(error)
     }
   }
-  static async viewActivity(req, res) {
+  static async viewActivity(req, res, next) {
     try {
       const { search } = req.query;
       const options = {};
@@ -28,10 +28,10 @@ class ActivityController {
       const data = await Activity.findAll(options);
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json({ message: "internal server error" });
+      next(error)
     }
   }
-  static async editActivityById(req, res) {
+  static async editActivityById(req, res, next) {
     try {
       const foundActivity = await Activity.findOne({
         where: {
@@ -54,11 +54,10 @@ class ActivityController {
         data: updateActivity,
       });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "internal server error" });
+      next(error)
     }
   }
-  static async deleteActivity(req, res) {
+  static async deleteActivity(req, res, next) {
     try {
       const activityId = req.params.id;
       const activity = await Activity.findOne({
@@ -75,8 +74,7 @@ class ActivityController {
         data: activity,
       });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "internal server error" });
+      next(error)
     }
   }
 }
